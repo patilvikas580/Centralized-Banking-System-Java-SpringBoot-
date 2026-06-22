@@ -47,8 +47,8 @@ public class UserServiceImpl implements UserService {
         User newUser =  User.builder().firstName(userRequest.getFirstName())
                 .lastName(userRequest.getLastName()).otherName(userRequest.getOtherName())
                 .gender(userRequest.getGender()).address(userRequest.getAddress())
-                .stateofOrigin(userRequest.getStateofOrigin()).
-                accountNumber(AccountUtils.generateAccountNumber())
+                .stateofOrigin(userRequest.getStateofOrigin())
+                .accountNumber(AccountUtils.generateAccountNumber())
                 .Acount_balance(BigDecimal.ZERO).email(userRequest.getEmail())
                 .password(passwordEncoder.encode(userRequest.getPassword()))
                 .phoneNumber(userRequest.getPhoneNumber())
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     public BankResponse balanceEnquiry(EnquiryRequest request) {
         if (userRepository.existsByAccountNumber(request.getAccountNumber())) {
             User foundUser=userRepository.findUserByAccountNumber(request.getAccountNumber());
-            return BankResponse.builder().responseCode("001").responseMessage("Here are the details of your account").accountInfo(AccountInfo.builder()
+            return BankResponse.builder().responseCode("001").responseMessage("Account fetched successfully").accountInfo(AccountInfo.builder()
                     .accountBalance(foundUser.getAcount_balance()).accountNumber(request.getAccountNumber()).accountName(foundUser.getFirstName()+" "+foundUser.getOtherName()+" "+foundUser.getLastName()).build()).build();
         }
         return BankResponse.builder().responseCode("003").responseMessage("Account not exist")

@@ -28,10 +28,10 @@ public class UserController {
         return userService.balanceEnquiry(request);
     }
 
-    @GetMapping("/nameEnquiry")
-    public String nameEnquiry(@RequestBody EnquiryRequest request){
-        return userService.nameEnquiry(request);
-    }
+//    @GetMapping("/nameEnquiry")
+//    public String nameEnquiry(@RequestBody EnquiryRequest request){
+//        return userService.nameEnquiry(request);
+//    }
 
     @PostMapping("/creditACcountBalance")
     public BankResponse creditBalance(@RequestBody CrediDebitRequest request){
