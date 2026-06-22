@@ -6,6 +6,7 @@ import com.proj.Banking_System.Entity.User;
 import com.proj.Banking_System.Repository.UserRepository;
 import com.proj.Banking_System.Utils.AccountUtils;
 import com.proj.Banking_System.config.JwtTokenProvider;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,11 +33,12 @@ public class UserServiceImpl implements UserService {
     JwtTokenProvider jwtTokenProvider;
 
     @Override
+    @Transactional
     public BankResponse createAccount(UserRequest userRequest) {
         if (userRepository.existsByEmail(userRequest.getEmail())) {
             return BankResponse.builder()
-                    .responseCode(AccountUtils.ACCOUNT_EXISTS_CODE)
-                    .responseMessage(AccountUtils.ACCOUNT_EXISTS_MSG)
+                    .responseCode("001")
+                    .responseMessage("Account already exists")
                     .accountInfo(null).build();
 
         }
@@ -55,12 +57,12 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(newUser);
 
         EmailDetails emailDetails=EmailDetails.builder().
-                recipient(savedUser.getEmail()).subject("Account Creation").messageBody("Congratulations! your account has been successfully created.\n Your Account Details:\n" +
+                recipient(savedUser.getEmail()).subject("New Bank Account Created").messageBody("Congratulations! your account has been successfully created with VM Banking solutions.\n Your Account Details:\n" +
                         " Account Name :"+savedUser.getFirstName()+" "+savedUser.getOtherName()+" "+savedUser.getLastName()+"\n Account Number:"+savedUser.getAccountNumber()).build();
         emailService.sendEmailAlert(emailDetails);
 
-        return BankResponse.builder().responseCode(AccountUtils.ACCOUNT_CREATION_SUCCESS)
-                .responseMessage(AccountUtils.ACCOUNT_CREATION_Message).accountInfo(AccountInfo.builder()
+        return BankResponse.builder().responseCode("002")
+                .responseMessage("Account created successfully").accountInfo(AccountInfo.builder()
                         .accountBalance(savedUser.getAcount_balance()).accountNumber(savedUser.getAccountNumber())
                         .accountName(savedUser.getFirstName()+" "+savedUser.getOtherName()+" "+savedUser.getLastName())
                         .build()).build();
